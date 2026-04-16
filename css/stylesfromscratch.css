@@ -1,0 +1,112 @@
+/* Global styles */
+body {
+    background-color: #fff8ec; /* warm potato beige */
+    font-family: "Georgia", serif;
+    color: #4a3b2a;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* Navigation bar */
+.nav-box {
+    background-color: #8b5e34; /* potato skin brown */
+    padding: 14px;
+    text-align: center;
+    border-bottom: 4px solid #704727;
+}
+
+.nav-box a {
+    color: #fcefdc;
+    font-weight: bold;
+    text-decoration: none;
+    margin: 0 12px;
+    transition: color 0.2s ease-in-out;
+}
+
+.nav-box a:hover {
+    color: #ffe7b8;
+}
+
+/* Header section */
+.header-box {
+    background-color: #d9c2a3;
+    padding: 40px 20px;
+    text-align: center;
+    border-bottom: 3px solid #b89a78;
+}
+
+.header-box h1 {
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+.header-box p {
+    margin-top: 8px;
+    font-size: 1.2rem;
+}
+
+/* Image section */
+.image-box {
+    padding: 30px 20px;
+    text-align: center;
+}
+
+.image-box img {
+    width: 60%;
+    max-width: 500px;
+    border-radius: 15px;
+    border: 5px solid #8b5e34;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* List section */
+.list-box {
+    padding: 30px 20px;
+    background-color: #f3e2c7;
+    border-top: 3px solid #d1b89a;
+    border-bottom: 3px solid #d1b89a;
+}
+
+.list-box h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Video section */
+.video-box {
+    padding: 30px 20px;
+    text-align: center;
+}
+
+.video-box iframe {
+    border-radius: 10px;
+    border: 3px solid #8b5e34;
+}
+
+/* Tableau section */
+.tableau-box {
+    padding: 30px 20px;
+    text-align: center;
+}
+
+.tableauPlaceholder {
+    margin: 0 auto;
+    border: 4px solid #8b5e34;
+    border-radius: 10px;
+    overflow: hidden;
+    max-width: 1000px;
+}
+.list-box {
+    padding: 30px 20px;
+    background-color: #f3e2c7;
+    border-top: 3px solid #d1b89a;
+    border-bottom: 3px solid #d1b89a;
+    text-align: center; /* centers the heading + list */
+}
+
+.list-box ol {
+    display: inline-block; /* allows centering the list itself */
+    text-align: left;      /* keeps list items aligned nicely */
+    margin: 0 auto;
+}

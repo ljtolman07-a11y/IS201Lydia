@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Potatoes Are Awesome</title>
+    <link rel="stylesheet" href="css/stylesfromscratch.css">
+</head>
+
+<body>
+    
+
+    <!-- Navigation back to professional pages -->
+    <div class="nav-box">
+    <a href="index.html">Lydia Tolman Resume</a> |
+    <a href="js/ai.html">Ai Tic Tac Toe</a> |
+    <a href="#video-section">Potato Video</a> |
+    <a href="#tableau-section">Potato Tableau Graph</a>
+</div>
+
+
+    <!-- Header section -->
+    <div class="header-box">
+        <h1>Potatoes Are Awesome</h1>
+        <p>A starch for the masses</p>
+    </div>
+
+    <!-- Image section -->
+    <div class="image-box">
+        <h2>Rustic Idaho Potato</h2>
+        <img src="assets/img/potato.jpg" alt="A beautiful potato">
+    </div>
+
+    <!-- Ordered list containing an unordered list -->
+    <div class="list-box">
+        <h2>Top Ways to Enjoy Potatoes</h2>
+
+        <ol>
+            <li>Mashed Potatoes
+                <ul>
+                    <li>Garlic Mashed</li>
+                    <li>Buttery Smooth</li>
+                    <li>Chunky Rustic</li>
+                </ul>
+            </li>
+            <li>French Fries</li>
+            <li>Baked Potatoes</li>
+        </ol>
+    </div>
+
+    <!-- YouTube video section -->
+    <div id="video-section" class="video-box">
+        <h2>Potato Documentary</h2>
+
+        <iframe width="560" height="315"
+            src="https://www.youtube.com/embed/xROmDsULcLE"
+            title="YouTube video player"
+            frameborder="0"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <!-- Tableau section -->
+    <div id="tableau-section" class="tableau-box">
+        <h2>Interactive Tableau Visualization</h2>
+
+        <div class="tableauPlaceholder" id="viz1776292655711" style="position: relative">
+            <noscript>
+                <a href="#">
+                    <img alt="Potato Production in European countries"
+                         src="https://public.tableau.com/static/images/PQ/PQFCDCRDH/1_rss.png"
+                         style="border: none" />
+                </a>
+            </noscript>
+
+            <object class="tableauViz" style="display:none;">
+                <param name="host_url" value="https%3A%2F%2Fpublic.tableau.com%2F" />
+                <param name="embed_code_version" value="3" />
+                <param name="path" value="shared/PQFCDCRDH" />
+                <param name="toolbar" value="yes" />
+                <param name="static_image" value="https://public.tableau.com/static/images/PQ/PQFCDCRDH/1.png" />
+                <param name="animate_transition" value="yes" />
+                <param name="display_static_image" value="yes" />
+                <param name="display_spinner" value="yes" />
+                <param name="display_overlay" value="yes" />
+                <param name="display_count" value="yes" />
+                <param name="language" value="en-US" />
+            </object>
+        </div>
+
+        <script type="text/javascript">
+            var divElement = document.getElementById('viz1776292655711');
+            var vizElement = divElement.getElementsByTagName('object')[0];
+
+            if (divElement.offsetWidth > 800) {
+                vizElement.style.width = '1024px';
+                vizElement.style.height = '1195px';
+            } else if (divElement.offsetWidth > 500) {
+                vizElement.style.width = '1024px';
+                vizElement.style.height = '1195px';
+            } else {
+                vizElement.style.width = '100%';
+                vizElement.style.height = '1477px';
+            }
+
+            var scriptElement = document.createElement('script');
+            scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+            vizElement.parentNode.insertBefore(scriptElement, vizElement);
+        </script>
+
+    </div> <!-- closes tableau-section -->
+
+</body>
+</html>

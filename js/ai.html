@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Potato Tic Tac Toe</title>
+
+<style>
+    /* ---------- GLOBAL STYLING ---------- */
+    body {
+        font-family: "Poppins", sans-serif;
+        background: peru; /* warm parchment */
+        margin: 0;
+        padding: 40px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #4a3b2a;
+    }
+
+    h1 {
+        font-size: 42px;
+        margin-bottom: 10px;
+        font-weight: 700;
+        color: #5a422e;
+        letter-spacing: 1px;
+    }
+
+    /* ---------- CARD CONTAINERS ---------- */
+    .card {
+        background: #fffaf2;
+        border: 2px solid #d7c4a3;
+        border-radius: 18px;
+        padding: 20px 28px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+        margin-bottom: 25px;
+    }
+
+    .meta-card {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+        font-size: 18px;
+    }
+
+    /* ---------- SCOREBOARD ---------- */
+    .scoreboard {
+        display: flex;
+        gap: 20px;
+        padding: 10px 20px;
+        background: #f0e3cd;
+        border-radius: 12px;
+        border: 1px solid #cbb79a;
+        font-weight: 600;
+    }
+
+    /* ---------- DIFFICULTY DROPDOWN ---------- */
+    #difficulty {
+        padding: 8px 14px;
+        border-radius: 10px;
+        border: 1px solid #b89c75;
+        background: #fffaf2;
+        font-size: 16px;
+        color: #5a422e;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    /* ---------- TURN INDICATOR ---------- */
+    #turn {
+        padding: 8px 16px;
+        background: #f0e3cd;
+        border-radius: 12px;
+        border: 1px solid #cbb79a;
+        font-weight: 600;
+    }
+
+    /* ---------- GAME BOARD ---------- */
+    #board {
+        display: grid;
+        grid-template-columns: repeat(3, 130px);
+        grid-template-rows: repeat(3, 130px);
+        gap: 14px;
+        padding: 25px;
+        background: #b08968; /* warm wood */
+        border-radius: 20px;
+        border: 4px solid #8c6b4f;
+        box-shadow: inset 0 0 20px rgba(0,0,0,0.25), 0 6px 20px rgba(0,0,0,0.25);
+    }
+
+    .cell {
+        width: 130px;
+        height: 130px;
+        background: #e6d5b8;
+        border-radius: 16px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 64px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.25s;
+        border: 2px solid #b89c75;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    .cell:hover {
+        background: #f2e4c9;
+        transform: scale(1.05);
+        box-shadow: 0 0 12px rgba(255, 230, 180, 0.6);
+    }
+
+    /* Pop animation */
+    @keyframes pop {
+        0% { transform: scale(0.6); }
+        100% { transform: scale(1); }
+    }
+    .placed {
+        animation: pop 0.2s ease-out;
+    }
+
+    /* Winning highlight */
+    .win {
+        background: #f7e3b5 !important;
+        border-color: #e3c27a !important;
+        box-shadow: 0 0 20px rgba(255, 241, 150, 0.9);
+    }
+
+    /* ---------- MESSAGE ---------- */
+    #message {
+        margin-top: 20px;
+        font-size: 24px;
+        font-weight: 600;
+        min-height: 30px;
+        color: #5a422e;
+    }
+
+    /* ---------- RESET BUTTON ---------- */
+    #reset {
+        margin-top: 20px;
+        padding: 12px 28px;
+        font-size: 18px;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        background: #b08968;
+        color: #fffaf2;
+        font-weight: bold;
+        transition: 0.3s;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    }
+
+    #reset:hover {
+        background: #8c6b4f;
+        transform: scale(1.05);
+    }
+
+    /* ---------- POTATO BURST ---------- */
+    @keyframes potatoBurst {
+        0% { transform: translateY(0) scale(0.5); opacity: 1; }
+        100% { transform: translateY(-150px) scale(1.4); opacity: 0; }
+    }
+
+    .potato {
+        position: absolute;
+        font-size: 40px;
+        animation: potatoBurst 1.2s ease-out forwards;
+        pointer-events: none;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>Potato Tic Tac Toe</h1>
+
+<div class="card meta-card">
+    <div class="scoreboard">
+        <div>🥔 You: <span id="playerScore">0</span></div>
+        <div>🍠 Computer: <span id="computerScore">0</span></div>
+        <div>🤝 Draws: <span id="drawScore">0</span></div>
+    </div>
+
+    <div id="turn">Your turn</div>
+
+    <div>
+        <label for="difficulty" style="font-weight:600;">Difficulty:</label>
+        <select id="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+        </select>
+    </div>
+</div>
+
+<div class="card">
+    <div id="board"></div>
+</div>
+
+<div id="message"></div>
+
+<button id="reset">Reset Game</button>
+
+<script>
+    /* ---------- GAME STATE ---------- */
+    const boardElement = document.getElementById("board");
+    const messageElement = document.getElementById("message");
+    const turnElement = document.getElementById("turn");
+    const difficultySelect = document.getElementById("difficulty");
+
+    const playerScoreEl = document.getElementById("playerScore");
+    const computerScoreEl = document.getElementById("computerScore");
+    const drawScoreEl = document.getElementById("drawScore");
+
+    let board = ["", "", "", "", "", "", "", "", ""];
+    let gameOver = false;
+
+    let playerScore = 0;
+    let computerScore = 0;
+    let drawScore = 0;
+
+    const MATCH_GOAL = 3;
+
+    const winningCombos = [
+        [0,1,2], [3,4,5], [6,7,8],
+        [0,3,6], [1,4,7], [2,5,8],
+        [0,4,8], [2,4,6]
+    ];
+
+    /* ---------- BOARD CREATION ---------- */
+    function createBoard() {
+        boardElement.innerHTML = "";
+        board.forEach((value, index) => {
+            const cell = document.createElement("div");
+            cell.classList.add("cell");
+            cell.dataset.index = index;
+            cell.textContent = value;
+            cell.addEventListener("click", playerMove);
+            boardElement.appendChild(cell);
+        });
+    }
+
+    /* ---------- PLAYER MOVE ---------- */
+    function playerMove(e) {
+        const index = e.target.dataset.index;
+
+        if (board[index] !== "" || gameOver) return;
+
+        board[index] = "🥔";
+        updateBoard(index);
+        turnElement.textContent = "Computer thinking…";
+
+        const win = checkWinner("🥔");
+        if (win) return handleRoundEnd("player", win);
+
+        if (board.every(cell => cell !== "")) return handleRoundEnd("draw");
+
+        setTimeout(computerMove, 400);
+    }
+
+    /* ---------- COMPUTER MOVE ---------- */
+    function computerMove() {
+        const difficulty = difficultySelect.value;
+
+        let move;
+        if (difficulty === "easy") move = randomMove();
+        if (difficulty === "medium") move = mediumMove();
+        if (difficulty === "hard") move = bestMove();
+
+        board[move] = "🍠";
+        updateBoard(move);
+
+        const win = checkWinner("🍠");
+        if (win) return handleRoundEnd("computer", win);
+
+        turnElement.textContent = "Your turn";
+    }
+
+    /* ---------- AI LOGIC ---------- */
+    function randomMove() {
+        let available = board.map((v, i) => v === "" ? i : null).filter(v => v !== null);
+        return available[Math.floor(Math.random() * available.length)];
+    }
+
+    function mediumMove() {
+        for (let combo of winningCombos) {
+            const [a, b, c] = combo;
+            const line = [board[a], board[b], board[c]];
+            if (line.filter(v => v === "🥔").length === 2 && line.includes("")) {
+                return combo[line.indexOf("")];
+            }
+        }
+        return randomMove();
+    }
+
+    function bestMove() {
+        return minimax(board, "🍠").index;
+    }
+
+    function minimax(newBoard, player) {
+        let avail = newBoard.map((v, i) => v === "" ? i : null).filter(v => v !== null);
+
+        if (checkWinner("🥔", newBoard)) return { score: -10 };
+        if (checkWinner("🍠", newBoard)) return { score: 10 };
+        if (avail.length === 0) return { score: 0 };
+
+        let moves = [];
+
+        for (let i of avail) {
+            let move = {};
+            move.index = i;
+            newBoard[i] = player;
+
+            move.score = (player === "🍠")
+                ? minimax(newBoard, "🥔").score
+                : minimax(newBoard, "🍠").score;
+
+            newBoard[i] = "";
+            moves.push(move);
+        }
+
+        return (player === "🍠")
+            ? moves.reduce((a, b) => a.score > b.score ? a : b)
+            : moves.reduce((a, b) => a.score < b.score ? a : b);
+    }
+
+    /* ---------- BOARD UPDATE ---------- */
+    function updateBoard(indexPlaced) {
+        document.querySelectorAll(".cell").forEach((cell, index) => {
+            cell.textContent = board[index];
+            if (index == indexPlaced) {
+                cell.classList.add("placed");
+                setTimeout(() => cell.classList.remove("placed"), 200);
+            }
+        });
+    }
+
+    /* ---------- WIN CHECK ---------- */
+    function checkWinner(player, customBoard = board) {
+        for (let combo of winningCombos) {
+            if (combo.every(i => customBoard[i] === player)) return combo;
+        }
+        return null;
+    }
+
+    /* ---------- ROUND END ---------- */
+    function handleRoundEnd(result, combo = null) {
+        gameOver = true;
+
+        if (result === "player") {
+            playerScore++;
+            playerScoreEl.textContent = playerScore;
+            highlight(combo);
+            potatoBurst();
+            messageElement.textContent = "🎉 You mashed the computer!";
+        }
+
+        if (result === "computer") {
+            computerScore++;
+            computerScoreEl.textContent = computerScore;
+            highlight(combo);
+            messageElement.textContent = "💻 The computer roasted you!";
+        }
+
+        if (result === "draw") {
+            drawScore++;
+            drawScoreEl.textContent = drawScore;
+            messageElement.textContent = "🤝 It's a potato draw!";
+        }
+
+        checkMatchWinner();
+    }
+
+    /* ---------- MATCH MODE ---------- */
+    function checkMatchWinner() {
+        if (playerScore === MATCH_GOAL) {
+            messageElement.textContent = "🏆 You win the match!";
+            resetScores();
+        }
+
+        if (computerScore === MATCH_GOAL) {
+            messageElement.textContent = "🔥 Computer wins the match!";
+            resetScores();
+        }
+    }
+
+    function resetScores() {
+        setTimeout(() => {
+            playerScore = 0;
+            computerScore = 0;
+            drawScore = 0;
+            playerScoreEl.textContent = 0;
+            computerScoreEl.textContent = 0;
+            drawScoreEl.textContent = 0;
+        }, 1500);
+    }
+
+    /* ---------- VISUAL EFFECTS ---------- */
+    function highlight(combo) {
+        const cells = document.querySelectorAll(".cell");
+        combo.forEach(i => cells[i].classList.add("win"));
+    }
+
+    function potatoBurst() {
+        for (let i = 0; i < 12; i++) {
+            const p = document.createElement("div");
+            p.classList.add("potato");
+            p.textContent = "🥔";
+            p.style.left = (window.innerWidth / 2 + (Math.random() * 200 - 100)) + "px";
+            p.style.top = (window.innerHeight / 2 + (Math.random() * 100 - 50)) + "px";
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 1500);
+        }
+    }
+
+    /* ---------- RESET ---------- */
+    document.getElementById("reset").addEventListener("click", () => {
+        board = ["", "", "", "", "", "", "", "", ""];
+        gameOver = false;
+        messageElement.textContent = "";
+        turnElement.textContent = "Your turn";
+        createBoard();
+    });
+
+    createBoard();
+</script>
+
+</body>
+</html>
